@@ -1,0 +1,34 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main # deploy only when main branch is updated
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1 — Checkout your repo
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # Step 2 — Setup SSH key
+      - name: Setup SSH Key
+        uses: webfactory/ssh-agent@v0.8.1
+        with:
+          ssh-private-key: ${{ secrets.EC2_KEY }}
+
+      # Step 3 — SSH and deploy
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          port: 22
+          script: |
+            cd ~/nodejs-ci-cd-app || mkdir -p ~/nodejs-ci-cd-app
+            git pull https://github.com/Jaybaj/nodejs-ci-cd-app.git main
+            npm install
+            pm2 restart all || pm2 start index.js --name nodejs-app
