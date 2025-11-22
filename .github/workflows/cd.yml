@@ -2,8 +2,8 @@ name: Deploy to EC2
 
 on:
   push:
-    branches:
-      - main # deploy only when main branch is updated
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
   deploy:
