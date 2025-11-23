@@ -18,6 +18,15 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.EC2_KEY }}
 
+        - name: Debug private key loading
+        run: |
+          echo "Lines in EC2_KEY:"
+          echo "$EC2_KEY" | wc -l
+          echo "First line:"
+          echo "$EC2_KEY" | head -n 1
+        env:
+          EC2_KEY: ${{ secrets.EC2_KEY }}
+          
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v0.1.8
         with:
