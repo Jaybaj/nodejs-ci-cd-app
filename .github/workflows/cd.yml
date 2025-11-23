@@ -25,7 +25,12 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           port: 22
           script: |
-            cd ~/node-js-sample
-            git pull origin main
+            echo "SSH connected!"
+            whoami
+            pwd
+            ls -la
+            cd ~/node-js-sample || mkdir -p ~/node-js-sample
+            git remote -v
+            git pull myrepo main
             npm install
             pm2 restart all || pm2 start index.js --name nodejs-app
